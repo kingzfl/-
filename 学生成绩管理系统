@@ -1,0 +1,527 @@
+echo "# -" >> README.md 
+git init 
+git add README.md 
+git commit -m "第一次提交" 
+git branch -M main 
+git remote add origin https://github.com/kingzfl/-.git
+ git push -#include <stdio.h>
+#include <stdlib.h>
+#include<string.h>
+
+#define MAX_STUDENTS 30
+#define MAX_NAME_LEN 20
+
+struct Student{
+    int id ;
+    int score [6];
+    char name[60];
+    int totalscore;
+    int rank;
+};
+
+// 1.录入学生信息和成绩
+void inputStudents(struct Student* p, int numStudents,int numsubject) {
+
+    for (int i = 0; i < numStudents; i++)
+    {
+        struct Student *s = &p[i];
+        printf("Please input NO.%d student's name:\n",i+1);
+        scanf_s("%s",&s->name);
+        printf("Please input the student's id of NO.%d :\n", i + 1);
+        scanf_s("%d", &s->id);
+        for(int j=0;j<numsubject;j++)
+        {
+            printf("Please input NO.%d subject's score\n",j+1);
+            scanf_s("%d",&s->score[j]);
+        }
+    }
+}
+
+//2.课程总分和平均分
+void avergesumscore(struct Student* p, int numStudents,int numsubject)
+{
+
+    float sum[6]={0},avg[6]={0};
+    for(int i=0;i<numStudents;i++)
+    {
+        struct Student *s = &p[i];
+        for(int j=0;j<numsubject;j++)
+        {
+            sum[j] += s->score[j];
+            avg[j] = sum[j]/numStudents;
+        }
+    }
+    for (int i = 0; i < numsubject; i++)
+    {
+        printf("Subject NO.%d:\t sumscore:%.1f\t avgscore:%.1f\n", i + 1, sum[i], avg[i]);}
+}
+
+//3.计算每个学生的总分和平均分
+void calculate__totals(struct Student *students, int num_students, int num_subjects) {
+    for (int i = 0; i < num_students; i++)
+    {
+        int total = 0;
+        for (int j = 0; j < num_subjects; j++)
+        {
+            total += students[i].score[j];
+        }
+        students[i].totalscore = total;
+    }
+}
+
+//3.打印每个学生的总分和平均分
+void print_students(struct Student *students, int num_students, int num_subjects) {
+    printf("Name\t\t");
+    for (int i = 1; i <= num_subjects; i++) {
+        printf("Subject %d\t", i);
+    }
+    printf("Total\tAverage\n");
+    for (int i = 0; i < num_students; i++) {
+        printf("%-15s", students[i].name);
+        for (int j = 0; j < num_subjects; j++) {
+            printf("%d\t\t", students[i].score[j]);
+        }
+        printf("%d\t%.2f\n", students[i].totalscore, (float)students[i].totalscore/(float)num_subjects);
+
+    }
+}
+
+// 4.根据成绩降序排序 大到小
+void sortStudentsByScore(struct Student* students, int numStudents,int numsubject)
+{
+    for (int i = 0; i < numStudents; i++)
+    {
+        struct Student *student = &students[i];
+        float total_score = 0;
+        for (int j = 0; j < numsubject; j++) {
+            total_score += student->score[j];
+        }
+        student->totalscore = total_score;
+    }
+    for (int i = 0; i < numStudents; i++)
+    {
+        for (int j = i + 1; j < numStudents; j++)
+        {
+            if (students[i].totalscore < students[j].totalscore)
+            {
+                // 交换两个学生的信息
+                struct Student temp = students[i];
+                students[i] = students[j];
+                students[j] = temp;
+            }
+        }
+    }
+
+    for(int i=0;i<numStudents;i++)
+    {
+        printf("Rank:%d:NO.%d NAME:%s student's score:%d\n",i+1,students[i].id,students[i].name,students[i].totalscore);
+    }
+}
+
+
+
+
+// 根据成绩升序排序 小到大
+void sortStudentsByScoreAscending(struct Student* students, int numStudents,int numsubject)
+{
+    for (int i = 0; i < numStudents; i++)
+    {
+        struct Student *student = &students[i];
+        float total_score = 0;
+        for (int j = 0; j < numsubject; j++) {
+            total_score += student->score[j];
+        }
+        student->totalscore = total_score;
+    }
+    for (int i = 0; i < numStudents; i++)
+    {
+        for (int j = i + 1; j < numStudents; j++)
+        {
+            if (students[i].totalscore > students[j].totalscore)
+            {
+                // 交换两个学生的信息
+                struct Student temp = students[i];
+                students[i] = students[j];
+                students[j] = temp;
+            }
+        }
+    }
+
+    for(int i=0;i<numStudents;i++)
+    {
+        printf("Rank %d: NO.%d NAME:%s student's score:%d\n",i+1,students[i].id,students[i].name,students[i].totalscore);
+    }
+}
+
+
+//5.按学号由小到大排序
+void sortStudentByidAcending(struct Student* students, int numStudents,int numsubject)
+{
+    for (int i = 0; i < numStudents; i++)
+    {
+        struct Student *student = &students[i];
+        float total_score = 0;
+        for (int j = 0; j < numsubject; j++) {
+            total_score += student->score[j];
+        }
+        student->totalscore = total_score;
+    }
+    int rank=0,id=0,score=0;
+    for (int i = 0; i < numStudents; i++)
+    {
+        for (int j = i + 1; j < numStudents; j++)
+        {
+            if (students[i].id > students[j].id)
+            {
+                // 交换两个学生的信息
+                struct Student temp = students[i];
+                students[i] = students[j];
+                students[j] = temp;
+            }
+
+        }
+
+        for(int i=0;i<numStudents;i++)
+        {
+            printf("Rank:%d:\t id:%d\t name:%s\t student's score:%d\n",numStudents-i,students[i].id,students[i].name,students[i].totalscore);
+        }
+    }
+}
+
+//8.按照学号查询成绩
+void query_score(struct Student* students, int numStudents,int numsubject)
+{
+    int id;
+
+    printf("Please input id which you want to search:");
+    scanf_s("%d", &id);
+
+    // 用指针find学生数组，找到指定学号的学生
+    struct Student *p = students;
+    for (int i = 0; i < numStudents; i++)
+    {
+        struct Student *student = &students[i];
+        float total_score = 0;
+        for (int j = 0; j < numsubject; j++) {
+            total_score += student->score[j];
+        }
+        student->totalscore = total_score;
+    }
+    for (int j = 0; j < numStudents; j++)
+    {
+        if (p[j].id==id)
+        {
+            printf("name:%s,rank:%d,totalscore:", students[j].name, students[j].rank,students[j].totalscore);
+            for (int c = 0; c < numsubject; c++)
+            {
+                printf("%d ", students[j].score[c]);
+            }
+            printf("\n");
+
+            break;
+        }
+    }
+
+}
+
+//9.按照姓名查询成绩
+void query_name(struct Student* students, int numStudents,int numsubject)
+{
+    char name[60];
+
+    printf("Please input name which you want to search:");
+    scanf_s("%s", &name);
+
+    // 用指针find学生数组，找到指定学号的学生
+    struct Student *p = students;
+    for (int i = 0; i < numStudents; i++)
+    {
+        struct Student *student = &students[i];
+        float total_score = 0;
+        for (int j = 0; j < numsubject; j++) {
+            total_score += student->score[j];
+        }
+        student->totalscore = total_score;
+    }
+    int found = 0;
+    for (int j = 0; j < numStudents; j++)
+    {
+        if (strcmp(students[j].name, name) == 0)
+        {
+            printf("name:%s,rank:%d,totalscore:", students[j].name, students[j].rank,students[j].totalscore);
+            for (int c = 0; c < numsubject; c++)
+            {
+                printf("%d ", students[j].score[c]);
+            }
+            printf("\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        printf("Not found the student:%s\n", name);
+    }
+}
+
+
+//1.8.9计算排名
+void calculateRank(struct Student* students, int numStudents,int numsubject)
+{
+    int i, j;
+    for (i = 0; i < numStudents; i++) {
+        students[i].rank = 1;
+        for (j = 0; j < numStudents; j++) {
+            if (students[j].totalscore > students[i].totalscore) {
+                students[i].rank++;
+            }
+        }
+    }
+}
+
+//11.打印所有学生的成绩
+void print__students(struct Student students[], int num_students, int num_subjects) {
+    int i, j;
+    printf("Student name\tID\t");
+    for (j = 1; j <= num_subjects; j++) {
+        printf("Subject%d\t", j);
+    }
+    printf("Average\tRank\n");
+    for (i = 0; i < num_students; i++)
+    {
+        printf("%s\t\t%d\t", students[i].name, students[i].id);
+        for (j = 0; j < num_subjects; j++)
+        {
+            printf("%d\t\t", students[i].score[j]);
+        }
+        printf("%.2f\t%d\n", (float)students[i].totalscore/(float)num_subjects, students[i].rank);
+    }
+}
+
+//10.成绩分类
+void count_grades(struct Student *students, int numStudents,int ns)
+{
+    int excellent = 0, good = 0, medium = 0, pass = 0, fail = 0;
+    for (int i = 0; i < numStudents; i++)
+    {
+        struct Student *student = &students[i];
+        float total_score = 0;
+        for (int j = 0; j < ns; j++) {
+            total_score += student->score[j];
+        }
+        student->totalscore = total_score;
+    }
+    for (int i = 0; i < numStudents; i++)
+    {
+        int score = students[i].totalscore;
+        if (score >= 90*ns && score <= 100*ns)
+        {
+            excellent++;
+        }
+        else if (score >= 80*ns && score <= 89*ns)
+        {
+            good++;
+        }
+        else if (score >= 70*ns && score <= 79*ns)
+        {
+            medium++;
+        }
+        else if (score >= 60*ns && score <= 69*ns)
+        {
+            pass++;
+        }
+        else
+        {
+            fail++;
+        }
+    }
+
+    printf("excellent number: %d, occupy: %.2f%%\n", excellent, ((float)excellent / numStudents) * 100);
+    printf("good number: %d, occupy: %.2f%%\n", good, ((float)good / numStudents) * 100);
+    printf("medium number: %d, occupy: %.2f%%\n", medium, ((float)medium / numStudents) * 100);
+    printf("pass number: %d, occupy: %.2f%%\n", pass, ((float)pass / numStudents) * 100);
+    printf("fail number: %d, occupy: %.2f%%\n", fail, ((float)fail / numStudents) * 100);
+
+
+}
+
+//字典排序
+void sort_students(struct Student students[], int num_students,int numsubject) {
+    for (int i = 0; i < num_students; i++)
+    {
+        struct Student *student = &students[i];
+        float total_score = 0;
+        for (int j = 0; j < numsubject; j++) {
+            total_score += student->score[j];
+        }
+        student->totalscore = total_score;
+    }
+    int i, j;
+    struct Student temp;
+    for (i = 0; i < num_students - 1; i++) {
+        for (j = i + 1; j < num_students; j++) {
+            if (strcmp(students[i].name, students[j].name) > 0) {
+                temp = students[i];
+                students[i] = students[j];
+                students[j] = temp;
+            }
+        }
+    }
+    for(int i=0;i<num_students;i++)
+    {
+        printf("Rank:%d:\t id:%d\t name:%s\t student's score:%d\n",i+1,students[i].id,students[i].name,students[i].totalscore);
+    }
+}
+
+int main()
+{
+    int numStudents = 0, option, numsubject;
+    // 动态分配内存
+    struct Student *students = (struct Student *) malloc(sizeof(struct Student) * numStudents);
+    struct Student *p;
+    struct Student s;
+    p = &s;
+    do {
+        printf("\n------------------\n");
+        printf("1. Input record\n");
+        printf("2. Calculate total and average score of course\n");
+        printf("3. Calculate total and average score of every student\n");
+        printf("4. Sort in descending order by total score of every student\n");
+        printf("5. Sort in asending order by total score of every student \n");
+        printf("6. Sort in ascending order by number\n");
+        printf("7. Sort in dictionary order by name\n");
+        printf("8. Search by number\n");
+        printf("9. Search by name\n");
+        printf("10.Statistic analysis\n");
+        printf("11.List record\n");
+        printf("Please input 1 when you first use this system.\n");
+        printf("Please choose the option:\n");
+
+        scanf_s("%d", &option);
+        switch (option) {
+            case 1:
+                // 录入学生信息和成绩
+                printf("Please input student's number no more than %d people:", MAX_STUDENTS);
+                scanf_s("%d", &numStudents);
+                printf("Please input the number of subjects:");
+                scanf_s("%d", &numsubject);
+                inputStudents(students, numStudents, numsubject);
+                calculateRank(students, numStudents, numsubject);
+                break;
+
+            case 2:
+                avergesumscore(students, numStudents, numsubject);
+                break;
+
+            case 3:
+                calculate__totals(students, numStudents, numsubject);
+                print_students(students, numStudents, numsubject);
+                break;
+
+            case 4:
+                // 按成绩降序排序
+                sortStudentsByScore(students, numStudents, numsubject);
+                break;
+
+            case 5:
+                //成绩升序排序
+                sortStudentsByScoreAscending(students, numStudents, numsubject);
+                break;
+
+            case 6:
+                //按学号由小到大排出成绩表
+
+                sortStudentByidAcending(students, numStudents, numsubject);
+                break;
+
+            case 7:
+                //按字典排名
+                sort_students(students, numStudents, numsubject);
+                break;
+
+            case 8:
+                //按照学生学号查询成绩
+                calculateRank(students, numStudents, numsubject);
+                query_score(students, numStudents, numsubject);
+                break;
+
+            case 9:
+                //按姓名查
+                calculateRank(students, numStudents, numsubject);
+                query_name(students, numStudents, numsubject);
+                break;
+
+            case 10:
+                //统计每个类别的人数及其所占百分比
+                count_grades(students, numStudents, numsubject);
+                break;
+
+            case 11:
+                //输出每个学生的学号和考试成绩，课程总分和平均分
+                print__students(students, numStudents, numsubject);
+                break;
+
+            case 12: {
+
+                char filename[50];
+                printf("Enter the filename to save records: ");
+                scanf_s("%s", filename);
+
+                FILE *file = fopen(filename, "w");
+                if (file == NULL) {
+                    printf("Error: Failed to open file %s for writing.\n", filename);
+                    break;
+                }
+
+                fprintf(file, "%d\n", numStudents);
+                for (int i = 0; i < numStudents; i++) {
+                    for (int j = 0; j < numsubject; j++) {
+                        fprintf(file, "%d\t %d\t %s\t %d\t %d\t\n", students[i].rank, students[i].id, students[i].name,
+                                students[i].score[j], students[i].totalscore);
+                    }
+                }
+
+                fclose(file);
+                printf("Records saved to file %s.\n", filename);
+                break;
+            }
+
+            case 13:
+                // Load records from file
+            {
+                char filename[50];
+                printf("Enter the filename to load records: ");
+                scanf("%s", filename);
+
+                FILE *file = fopen(filename, "r");
+                if (file == NULL) {
+                    printf("Error: Failed to open file %s for reading.\n", filename);
+                    break;
+                }
+
+                fscanf_s(file, "%d", &numStudents);
+
+                if (students == NULL) {
+                    printf("Error: Failed to allocate memory for %d students.\n", numStudents);
+                    break;
+                }
+
+                for (int i = 0; i < numStudents; i++) {
+                    for (int j = 0; j < numsubject; j++) {
+                        fscanf_s(file, "%d %s %d %d", &students[i].id, &students[i].name, &students[i].score[j],
+                               &students[i].totalscore);
+                    }
+
+                    printf("Loaded %d student records from file %s.\n", numStudents, filename);
+                    fclose(file);
+                }
+                break;
+            }
+
+        }
+    }while (option != 0);
+                printf("Thank you use this system.");
+                // 释放动态分配的内存
+                free(students);
+        }
